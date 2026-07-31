@@ -58,5 +58,38 @@
     "id": 12,
     "character": "Edwin",
     "quote": "It's not how you stand by a car, it's how you race your car."
+  },
+
+  [
+  {
+    "id": 13,
+    "character": "Han Lue",
+    "quote": "Life's simple. You make choices and you don't look back."
+  },
+  {
+    "id": 14,
+    "character": "Dominic Toretto",
+    "quote": "It doesn't matter if you win by an inch or a mile; winning's winning."
+  },
+  {
+    "id": 15,
+    "character": "Han Lue",
+    "quote": "Fifty percent of something is better than a hundred percent of nothing."
+  },
+  {
+    "id": 16,
+    "character": "Dominic Toretto",
+    "quote": "Show me how you drive, and I'll tell you who you are."
+  },
+  {
+    "id": 17,
+    "character": "Dominic Toretto",
+    "quote": "I don't have friends. I got family."
+  },
+  {
+    "id": 18,
+    "character": "Mia Toretto",
+    "quote": "If you're gonna do this, you gotta commit. No looking back, no half-measures."
   }
+]
 ]
