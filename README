@@ -1,1 +1,143 @@
+# Fast & Furious Quotes API
 
+A tiny personal REST API that serves quotes from the Fast & Furious franchise. Built to run on-demand from a phone via [Termux](https://termux.dev/), accessed remotely over [Tailscale](https://tailscale.com/).
+
+No external quote databases had everything I wanted in one place, so I built this instead — collecting and adding quotes manually as I watch through the series.
+
+## Features
+
+- Simple JSON-based quote storage — no database required
+- Filter quotes by character
+- Get a random quote
+- Fetch a specific quote by ID
+- List all characters in the dataset
+- Lightweight enough to run entirely from a phone
+
+## Tech Stack
+
+- **Python 3** + **Flask** — minimal, no unnecessary dependencies
+- **JSON** file as the data store (`quotes.json`)
+- Designed to run in **Termux** on Android, but works identically on any machine with Python installed
+
+## Project Structure
+
+```
+fastandfuriousAPI/
+└── api/
+    ├── app.py         # Flask application
+    └── quotes.json    # Quote data
+```
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/quotes` | Returns all quotes |
+| `GET` | `/quotes/random` | Returns a single random quote |
+| `GET` | `/quotes/<id>` | Returns a specific quote by its numeric ID |
+| `GET` | `/quotes?character=<name>` | Returns quotes filtered by character (partial match, case-insensitive) |
+| `GET` | `/characters` | Returns a list of all distinct character names in the dataset |
+
+### Example requests
+
+```bash
+curl http://127.0.0.1:5000/quotes/random
+curl "http://127.0.0.1:5000/quotes?character=dom"
+curl http://127.0.0.1:5000/characters
+```
+
+### Example response
+
+```json
+{
+  "id": 5,
+  "character": "Dominic Toretto",
+  "quote": "Money will come and go. We all know that. The most important thing in life will always be family."
+}
+```
+
+## Data Format
+
+Each entry in `quotes.json` follows this structure:
+
+```json
+{
+  "id": 1,
+  "character": "Dominic Toretto",
+  "quote": "I live my life a quarter mile at a time."
+}
+```
+
+Quotes are added manually while (re)watching the films — no scraping or subtitle parsing involved, so accuracy depends on my own transcription.
+
+## Setup
+
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/fxllingstar/fastandfuriousAPI.git
+cd fastandfuriousAPI/api
+```
+
+### 2. Create a virtual environment
+
+**On Linux / Arch:**
+```bash
+python -m venv venv
+source venv/bin/activate
+```
+
+**On Termux (Android):**
+```bash
+pkg install python
+python -m venv venv
+source venv/bin/activate
+```
+
+> Termux does not enforce PEP 668 the way Arch does, but using a venv is still good practice to keep the system Python environment clean.
+
+### 3. Install dependencies
+
+```bash
+pip install flask
+```
+
+### 4. Run the server
+
+```bash
+python app.py
+```
+
+By default this binds to `0.0.0.0:5000`, meaning it's reachable from other devices on the same network — not just `localhost`. Change the `host` argument in `app.py` to `127.0.0.1` if you only want local access.
+
+### 5. Stop the server
+
+`Ctrl+C` in the terminal, then `deactivate` to exit the virtual environment.
+
+## Remote Access (Tailscale)
+
+Since this is designed to run from a phone on-demand, I use [Tailscale](https://tailscale.com/) to reach it from other devices (like a laptop) regardless of what network either device is on:
+
+```bash
+http://<tailscale-ip>:5000/quotes/random
+```
+
+Both devices need to be logged into the same Tailscale network (tailnet) for this to work. This avoids exposing the server to the public internet while still allowing access from anywhere.
+
+## Why On-Demand Instead of Always-On?
+
+This API is used maybe once a day, so there's no reason to keep it running constantly. The workflow is: start the server when needed, make requests, then stop it. An idle server costs essentially no battery on its own — the real reasoning is just not leaving unnecessary background processes running on a phone.
+
+## Roadmap / Ideas
+
+- [ ] Auto-incrementing IDs when adding new quotes
+- [ ] Simple write endpoint to add quotes without manually editing JSON
+- [ ] Basic HTML front-end for browsing quotes in a browser
+
+## Disclaimer
+
+This is a personal, non-commercial fan project. All quotes belong to their respective copyright holders (Universal Pictures). This repository contains no video, audio, or subtitle content — only manually transcribed text quotes for personal use.
+
+## License
+
+MIT — do whatever you want with the code. The quotes themselves are copyrighted material owned by Universal Pictures and are included here solely as a personal reference dataset.
